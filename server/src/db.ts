@@ -14,6 +14,8 @@ export default class DB {
             }
         })
 
+        this.createTables();
+
     }
 
 
@@ -67,7 +69,10 @@ export default class DB {
                 number SERIAL PRIMARY KEY,
                 branch_code INTEGER REFERENCES branches(code),
                 client_id INTEGER REFERENCES clients(id),
-                service_code INTEGER REFERENCES services(code)
+                service_code INTEGER REFERENCES services(code),
+                status status default 'pending',
+                date Date,
+                create_date DATE NOT NULL DEFAULT CURRENT_DATE
             );`
         );
     }
@@ -98,10 +103,11 @@ export default class DB {
     }
 
     // insert new record
-    async insertNewRecord(branch_code: number, service_code: number, client_id: number) {
+    async insertNewRecord(branch_code: number, service_code: number, client_id: number, date: Date) {
+        console.log(date)
         await this.client.query(
-            'INSERT INTO records (branch_code, client_id, service_code) VALUES ($1,$2,$3)',
-            [branch_code, client_id, service_code]
+            'INSERT INTO records (branch_code, client_id, service_code, date) VALUES ($1,$2,$3, $4)',
+            [branch_code, client_id, service_code, date]
         );
     }
 

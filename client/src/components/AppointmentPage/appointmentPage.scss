@@ -1,0 +1,49 @@
+section{
+    position: relative;
+    background-color: #ddd;
+    width: 100%;
+    height: 100vh;
+
+}
+
+#msg{
+    min-width: 300px;
+    min-height: 50px;
+
+    box-shadow: 0 0 8px gray;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    animation: disappear 4s;
+}
+
+@keyframes disappear {
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+        display: none;
+    }
+}
+
+#btn-admin{
+    position: absolute;
+    top:10px;
+    right: 10px;
+    padding: 10px 20px;
+    animation: grow 4s infinite;
+}
+
+@keyframes grow{
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.2)
+    }
+    100%{
+        transform: scale(1);
+        
+    }
+}

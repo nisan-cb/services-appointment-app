@@ -1,0 +1,27 @@
+table{
+    width: 100%;
+    tr:first-child{
+        background-color: rgb(230, 209, 250);
+    }
+    tbody{
+        tr:nth-child(even){
+            background-color: aliceblue;
+        }
+    }
+}
+
+.popup{
+    z-index: 99;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 30px;
+    button{
+        padding: 10px 20px;
+        margin:  10px;
+        // border: none;
+        cursor: pointer;
+    }
+}

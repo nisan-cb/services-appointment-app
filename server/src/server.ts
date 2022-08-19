@@ -18,7 +18,7 @@ db.connect()
 
 
 
-// app.use(cors());
+app.use(cors());
 app.use(json());
 const root: string = path.join(process.cwd(), '../');
 
@@ -44,6 +44,7 @@ app.get('/api/records', async (req, res) => {
 
 // endpoint to get list of all services
 app.get('/api/services', async (req, res) => {
+    console.log("request for services list");
     const allServices = await db.getAllServices();
     res.send(allServices)
 });
@@ -77,7 +78,8 @@ app.put('/api/update-record-status/:recordNumber/:newstatus', async (req, res) =
 app.post('/api/insertNewRecord', async (req, res) => {
     console.log(req.body)
     // let service, branch, client_id, client_nmae, phone_number;
-    const { service, branch, client_id, client_name, phone_number } = req.body
+    const { service, branch, client_id, client_name, phone_number, date } = req.body
+    console.log(date)
     // console.log(req.body)
     try {
         // check if client exist in the system
@@ -89,7 +91,7 @@ app.post('/api/insertNewRecord', async (req, res) => {
             await db.insertNewClient(client_id, client_name, phone_number)
 
         // finaly add new record
-        await db.insertNewRecord(branch, service, client_id,);
+        await db.insertNewRecord(branch, service, client_id, date);
         res.json({ msg: 'new record inserted' });
     } catch (error) {
         console.log(error);
