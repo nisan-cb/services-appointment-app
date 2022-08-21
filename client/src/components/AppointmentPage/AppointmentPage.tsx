@@ -53,7 +53,7 @@ function AppiontmentPage() {
     }
 
     const goToAdminArea = () => {
-        window.location.href = '/admin'
+        window.open(`${base_url}/admin`, '_blank')?.focus();
     }
 
 
