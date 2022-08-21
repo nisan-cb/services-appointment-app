@@ -42,6 +42,48 @@ app.get('/api/records', async (req, res) => {
     res.send(allRecords)
 });
 
+// endpoint to get all records between 2 dates
+app.get('/api/records/:d1/:d2', async (req, res) => {
+    console.log("request for records between 2 dates");
+    let d1: Date | string = req.params.d1;
+    let d2: Date | string = req.params.d2;
+    console.log(d1, ' - ', d2);
+
+    // d1 = new Date(req.params.d1);
+    // d2 = new Date(req.params.d2);
+    console.log(d1, ' - ', d2);
+
+    const records = await db.getRecordsInRange(d1, d2);
+    console.log(records?.rows)
+
+    const result = [];
+    let d = new Date(d1);
+    while (d <= new Date(d2)) {
+        const newDate: string = formatDate(d);
+        const array: any[] = [];
+        records?.rows.forEach(record => {
+            if (newDate === formatDate(record.date))
+                array.push(record);
+        });
+        result.push({
+            date: newDate,
+            records: array
+        })
+        d = new Date(d.setDate(d.getDate() + 1));
+    }
+    console.log(result)
+
+
+    res.send(result)
+});
+function formatDate(d: Date): string {
+    const year = d.getFullYear();
+    const month = d.getMonth() < 10 ? `0${d.getMonth() + 1}` : d.getMonth() + 1;
+    const day = d.getDate();
+
+    return `${year}-${month}-${day}`
+}
+
 // endpoint to get list of all services
 app.get('/api/services', async (req, res) => {
     console.log("request for services list");

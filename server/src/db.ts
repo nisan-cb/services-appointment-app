@@ -172,4 +172,40 @@ export default class DB {
         }
     }
 
+    // get records between 2 dates
+    async getRecordsInRange(d1: string, d2: string) {
+        console.log('Hello from db');
+        console.log(d1, ' - ', d2);
+        let result;
+        try {
+            result = await this.client.query(
+                'SELECT number,date, branches.city, clients.name, clients.phone_number,status, services.description\
+             FROM records \
+             INNER JOIN branches ON \
+             branches.code = records.branch_code \
+             INNER JOIN clients ON \
+             clients.id = records.client_id \
+             INNER JOIN services ON \
+             services.code = records.service_code \
+             where date is not NULL \
+            and \
+            date >= $1 and date<= $2 \
+             ORDER BY date\
+             '
+
+                , [new Date(d1), new Date(d2)]);
+
+        } catch (error) {
+            console.log('err *****', error)
+        }
+        return result;
+
+
+    }
+    // get records by date
+    async getRecordsByDate(d: Date) {
+        const result = this.client.query('select * from records where date = $1 ', [d]);
+        return result;
+    }
+
 }

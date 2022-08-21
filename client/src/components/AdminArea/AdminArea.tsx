@@ -1,4 +1,5 @@
 import React, { ChangeEvent, ReactElement, ReactHTMLElement, useEffect, useState } from "react";
+import WeeklyCalendar from "../WeeklyCalendar/WeeklyCalendar";
 
 import './adminArea.scss'
 
@@ -20,20 +21,18 @@ function AdminArea() {
         fetch(`${base_url}/api/status-options`)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                console.log(typeof data);
                 setStatusTypes(data);
             })
             .catch(err => console.log(err));
 
-        fetch(`${base_url}/api/records`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                console.log(typeof data);
-                setRecords(data)
-            })
-            .catch(err => console.log(err));
+        // fetch(`${base_url}/api/records`)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         console.log(typeof data);
+        //         setRecords(data)
+        //     })
+        //     .catch(err => console.log(err));
 
 
 
@@ -75,9 +74,9 @@ function AdminArea() {
     }
 
     return (
-        <>
-            admin area
-            <table>
+        <section id="adminArea">
+            <WeeklyCalendar></WeeklyCalendar>
+            {/* <table>
 
                 <tbody>
                     <tr>
@@ -97,7 +96,6 @@ function AdminArea() {
                                 <td>{record.name}</td>
                                 <td>{record.phone_number}</td>
                                 <td>{record.description}</td>
-                                {/* <td>{record.status}</td> */}
 
                                 <td>
                                     <select defaultValue={record.status} onChange={(e) => {
@@ -117,9 +115,9 @@ function AdminArea() {
                         })
                     }
                 </tbody>
-            </table>
+            </table> */}
             {popup ? popUp() : ''}
-        </>
+        </section>
     )
 }
 
