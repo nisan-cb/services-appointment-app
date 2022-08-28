@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import AdminArea from './components/AdminArea/AdminArea';
 import AppiontmentPage from './components/AppointmentPage/AppointmentPage';
+import ThankPage from './components/thankPage/ThankPage';
 
 function App() {
 
@@ -23,6 +24,8 @@ function currentPage() {
       return <AppiontmentPage></AppiontmentPage>
     case '/admin':
       return <AdminArea></AdminArea>
+    case '/thanks':
+      return <ThankPage msg={'record saved in DB'}></ThankPage>
     default:
       break;
   }

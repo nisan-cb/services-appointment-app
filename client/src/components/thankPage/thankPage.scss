@@ -1,0 +1,15 @@
+#thank{
+    // width: 100vw;
+    text-align: center;
+    height: 100vh;
+    position: relative;
+    background-color: #d6e8f6;
+    h2{
+        position: absolute;
+        width: 100%;
+        left:50%;
+        top:50%;
+        transform: translate(-50%,-50%);
+
+    }
+}

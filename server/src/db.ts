@@ -1,6 +1,8 @@
-import { Client } from 'pg';
+import { Client, Pool } from 'pg';
 import dotenv from 'dotenv';
 dotenv.config()
+const { timeRange } = require('./consts')
+
 
 
 export default class DB {
@@ -14,7 +16,6 @@ export default class DB {
             }
         })
 
-        this.createTables();
 
     }
 
@@ -26,7 +27,9 @@ export default class DB {
         await this.createRecordTable();
     }
 
+    // connects to DataBase
     async connect() {
+
         console.log('conecting...')
         await this.client.connect();
     }
@@ -71,7 +74,8 @@ export default class DB {
                 client_id INTEGER REFERENCES clients(id),
                 service_code INTEGER REFERENCES services(code),
                 status status default 'pending',
-                date Date,
+                date Date NOT NULL,
+                time Time NOT NULL,
                 create_date DATE NOT NULL DEFAULT CURRENT_DATE
             );`
         );
@@ -87,7 +91,6 @@ export default class DB {
 
     // insert new client
     async insertNewClient(id: number, name: string, phoneNumber: string) {
-        console.log(name);
         await this.client.query(
             'INSERT INTO clients (id, name, phone_number) VALUES ($1, $2, $3)',
             [id, name, phoneNumber]
@@ -103,11 +106,10 @@ export default class DB {
     }
 
     // insert new record
-    async insertNewRecord(branch_code: number, service_code: number, client_id: number, date: Date) {
-        console.log(date)
+    async insertNewRecord(branch_code: number, service_code: number, client_id: number, date: Date, time: any) {
         await this.client.query(
-            'INSERT INTO records (branch_code, client_id, service_code, date) VALUES ($1,$2,$3, $4)',
-            [branch_code, client_id, service_code, date]
+            'INSERT INTO records (branch_code, client_id, service_code, date, time) VALUES ($1,$2,$3, $4, $5)',
+            [branch_code, client_id, service_code, date, time]
         );
     }
 
@@ -125,8 +127,7 @@ export default class DB {
              ORDER BY number\
              '
         )
-        // .catch(err => console.log(err))
-        // console.log(result.rows)
+
         return result.rows
     }
 
@@ -163,7 +164,6 @@ export default class DB {
         try {
             const result = await this.client.query(`update records set status = $1 where number = $2;`,
                 [newStatus, recordNumber]);
-            console.log(result)
             return true
         }
         catch (err) {
@@ -174,12 +174,10 @@ export default class DB {
 
     // get records between 2 dates
     async getRecordsInRange(d1: string, d2: string) {
-        console.log('Hello from db');
-        console.log(d1, ' - ', d2);
         let result;
         try {
             result = await this.client.query(
-                'SELECT number,date, branches.city, clients.name, clients.phone_number,status, services.description\
+                'SELECT number,date, branches.city, clients.name, clients.phone_number,status, time ,services.description\
              FROM records \
              INNER JOIN branches ON \
              branches.code = records.branch_code \
@@ -206,6 +204,54 @@ export default class DB {
     async getRecordsByDate(d: Date) {
         const result = this.client.query('select * from records where date = $1 ', [d]);
         return result;
+    }
+
+    // get all records time in specific day
+    async getPossibleMeetingTime(date: Date | string) {
+        // get from records table records time in specific date
+        const result = await this.client.query(
+            'SELECT time FROM records \
+            WHERE date = $1 ',
+            [date]
+        );
+
+        // extract dates from result
+        const busyTimeArr = result.rows.map(row => {
+            return row.time.slice(0, 5);
+        });
+
+        const freeTime: any[] = [];
+
+        // filter range time
+        timeRange.forEach((time: any) => {
+            const tStr = this.formatTimeObjToStr(time);
+            if (!busyTimeArr.includes(tStr))
+                freeTime.push(time);
+        })
+
+        return freeTime
+    }
+
+
+    // get specific record by date and time
+    async getRecordsByDateAndTime(d: string, t: string) {
+        const result = this.client.query('select number from records where date = $1 and time = $2 ', [d, t]);
+        return result;
+    }
+
+    // update record date and time
+    async updateRecordDateAndTime(id: number, d: string, t: string) {
+        console.log('d : ', new Date(d));
+        const result = this.client.query('update records set date = $1::date , time = $2  where number = $3',
+            [d, t, id]);
+        return result;
+    }
+
+    // convert time obj to string
+    formatTimeObjToStr(time: any) {
+        const h = time.h < 10 ? `0${time.h}` : time.h;
+        const m = time.m < 10 ? `0${time.m}` : time.m;
+        return `${h}:${m}`;
     }
 
 }

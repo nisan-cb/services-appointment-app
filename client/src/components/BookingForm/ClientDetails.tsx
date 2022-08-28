@@ -8,14 +8,15 @@ interface PropsI {
 function ClientDetails({ clientData, seters }: PropsI) {
 
     return (
-        <div  >
-            client details
+        <div id='client-data-box' >
+
+            <h2>Client Details</h2>
             <label htmlFor="id">
                 <p>Id</p>
                 <input type="text" placeholder="id" name="id" onChange={e => seters.setId(e.target.value)} value={clientData.id} />
             </label>
             <label htmlFor="name">
-                <p>name</p>
+                <p>Name</p>
                 <input type="text" placeholder="name" name="name" onChange={e => seters.setName(e.target.value)} value={clientData.name} />
             </label>
             <label htmlFor="phoneNumber">

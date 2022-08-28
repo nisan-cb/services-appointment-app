@@ -5,11 +5,12 @@ import './appointmentPage.scss'
 const base_url = window.location.origin;
 
 function AppiontmentPage() {
+    console.log('appointment page render')
     const [servicesList, setServicesList] = useState<any[]>([]);
     const [branchesList, setBranchesList] = useState<any[]>([]);
-    const [msg, setMsg] = useState<string>('msg');
+    const [msg, setMsg] = useState<string>('');
 
-
+    // run one time in first render
     useEffect(() => {
         // get all services type from server
         fetch(`${base_url}/api/services`)
@@ -27,6 +28,7 @@ function AppiontmentPage() {
     // run when click on submit
     const submitHandler = (e: any, appiontmentData: any) => {
         e.preventDefault();
+        console.log(appiontmentData)
         // sent POST request to server
         fetch(`${base_url}/api/insertNewRecord`, {
             method: "POST",
@@ -46,7 +48,8 @@ function AppiontmentPage() {
         if (msg !== '') {
             setTimeout(() => {
                 setMsg('');
-            }, 4000);
+                window.location.href = 'thanks'
+            }, 3000);
             return <div id='msg'> {msg}</div>
         }
 
@@ -58,8 +61,7 @@ function AppiontmentPage() {
 
 
     return (
-        <section>
-            appiontment page
+        <section id='appointmentPage'>
             <button id="btn-admin" onClick={goToAdminArea}>Admin</button>
             <BookingForm
                 servicesList={servicesList}
@@ -68,6 +70,8 @@ function AppiontmentPage() {
                 submitHandler={submitHandler}
             ></BookingForm>
             {displayMsg(msg)}
+
+
         </section >
     )
 }

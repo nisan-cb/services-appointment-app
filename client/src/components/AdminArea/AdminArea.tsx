@@ -11,33 +11,21 @@ interface ChangObj {
 }
 
 function AdminArea() {
-
+    console.log('admin component');
     const [records, setRecords] = useState<any[]>([]);
     const [statusTypes, setStatusTypes] = useState<string[]>([]);
     const [popup, setPopup] = useState<boolean>(false);
     const [changObj, setChangeObg] = useState<ChangObj>();
 
-    useEffect(() => {
-        fetch(`${base_url}/api/status-options`)
-            .then(response => response.json())
-            .then(data => {
-                setStatusTypes(data);
-            })
-            .catch(err => console.log(err));
+    // useEffect(() => {
+    //     fetch(`${base_url}/api/status-options`)
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             setStatusTypes(data);
+    //         })
+    //         .catch(err => console.log(err));
 
-        // fetch(`${base_url}/api/records`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         console.log(data);
-        //         console.log(typeof data);
-        //         setRecords(data)
-        //     })
-        //     .catch(err => console.log(err));
-
-
-
-
-    }, []);
+    // }, []);
 
 
     const popUp = () => {
@@ -76,46 +64,6 @@ function AdminArea() {
     return (
         <section id="adminArea">
             <WeeklyCalendar></WeeklyCalendar>
-            {/* <table>
-
-                <tbody>
-                    <tr>
-                        <th>No</th>
-                        <th>City</th>
-                        <th>Name</th>
-                        <th>Phone number</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                    {
-                        records.map(record => {
-                            return <tr key={record.number}>
-                                <td>{record.number}</td>
-                                <td>{record.city}</td>
-                                <td>{record.name}</td>
-                                <td>{record.phone_number}</td>
-                                <td>{record.description}</td>
-
-                                <td>
-                                    <select defaultValue={record.status} onChange={(e) => {
-                                        setChangeObg({ 'target': e.target, 'record': record })
-                                        setPopup(true)
-                                    }
-                                    }>
-                                        {
-                                            statusTypes.map(s => {
-                                                return <option key={s} value={s}>{s}</option>
-                                            })
-                                        }
-                                    </select>
-                                </td>
-                                <td>delete edit</td>
-                            </tr>
-                        })
-                    }
-                </tbody>
-            </table> */}
             {popup ? popUp() : ''}
         </section>
     )

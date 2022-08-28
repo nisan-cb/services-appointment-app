@@ -8,7 +8,7 @@ interface PropsI {
 
 function BranchSelection({ branchesList, setBranch, branch }: PropsI) {
 
-    console.log('test')
+    console.log('branches')
     const select = (code: number) => {
         setBranch(code);
     }
@@ -16,7 +16,7 @@ function BranchSelection({ branchesList, setBranch, branch }: PropsI) {
 
     return (
         <div id="bramch-selection">
-            <h2>branch selection</h2>
+            <h2>Branch Selection</h2>
             <ul>
                 {
                     branchesList.map(item => {

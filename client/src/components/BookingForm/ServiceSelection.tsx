@@ -6,16 +6,14 @@ interface PropsI {
 }
 
 function ServicesSelection({ servicesList, setService, service }: PropsI) {
-    console.log('render')
+    console.log('services ')
     const select = (code: number) => {
         setService(code);
     }
 
-
-
     return (
         <div id="service-selection">
-            <h2>service selection</h2>
+            <h2>Service Selection</h2>
             <ul>
                 {
                     servicesList.map(item => {

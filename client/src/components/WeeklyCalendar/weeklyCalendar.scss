@@ -1,10 +1,17 @@
+#weeklyCalendar::-webkit-scrollbar {
+    display: none;
+}
 #weeklyCalendar{
+    box-sizing: content-box;
     width: 100%;
-    // max-height: 100%;
+    max-height: 100vh;
     min-height: 100%;
     background-color: rebeccapurple;
-    display: flex;
-    flex-direction: row;
+    // display: flex;
+    // flex-direction: row;
+    overflow-y: auto;
+    position: relative;
+
 
     .day{
         width: 100%;
@@ -15,22 +22,127 @@
         background-color: rgba(0, 255, 255, 0.48);
     }
 
+    .record-container{
+        // background-color: brown;
+        // min-height: 50px;
+        width: inherit;
+        min-height: inherit;
+        // padding: auto;
+    }
+
     .record{
         background-color: rgba(250, 235, 215, 0.337);
         margin: 4px 2px;
         text-align: left;
+        user-select: none;
         cursor: pointer;
         span{
             padding: 1px 4px;
             display: block;
         }
     }
+    .record:hover{
+        background-color: rgba(250, 235, 215, 0.5);
+    }
+
+ 
+    table{
+        min-height: 100%;
+        width: 100%;
+        padding: 0;
+        border-collapse: collapse;
+        position: relative;
+        table-layout: fixed ;
+        tr{
+            height: fit-content;
+            border: none;
+            padding: 0;
+            height: 4rem;
+            position: relative;
+            
+        }
+        th:first-child{
+            width: 100px;
+        }
+        td:first-child{
+            width: 100px;
+        }
+        tr:first-child{
+            // display: none;
+            // position: absolute;
+            position: sticky;
+            top:0;
+            z-index: 9;
+        }
+
+        td{
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            // align-items: ;
+            vertical-align: top;
+            position: relative;
+            // height: 100;
+            min-height: 100px;
+            // height: inherit;
+        }
+    
+        th{
+            // position: absolute;
+            // top:0;
+            // z-index: 9;
+            background-color: brown;
+            height: fit-content;
+            border-right: 1px solid #ddd;
+    
+        }
+        // td{
+        //     width: 100%;
+        // }
+        .time-td{
+            text-align: left;
+            min-width:50px ;
+            span{
+                position: absolute;
+                display: inline-block;
+                width: fit-content;
+                padding: 0 5px 0 20px;
+                transform: translateY(-50%);
+                background-color: rebeccapurple;
+            }
+        }
+    }
+
+    #msg{
+        position: fixed;
+        left:0;
+        bottom: 0;
+        min-width:300px;
+        background-color: rgba(5, 224, 5, 0.67);
+        margin: 10px ;
+        padding: 10px 20px;
+        border-radius: 15px;
+        animation: disappear 3s ease-in;
+        
+    }
+
+    @keyframes disappear {
+        0%{
+            opacity: 1;
+        }
+        100%{
+            opacity: 0;
+            display: none;
+        }
+    }
     
 }
 #panel{
+    position: sticky;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    z-index: 9999;
     button{
         margin: 7px 20px;
         padding: 7px;
@@ -38,4 +150,27 @@
         border: none;
         cursor: pointer;
     }
+    #info{
+        color: white;
+        font-size: 1.3rem;
+        background-color: rgb(22, 22, 61);
+        padding: 5px 12px;
+        border-radius: 50%;
+        cursor: help;
+        position: relative;
+        span{
+            display: none;
+            position: fixed;
+            z-index:99 ;
+            top:100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgb(22, 22, 61);
+            padding: 25px 35px;
+        }
+    }
+    #info:hover span{
+        display: block;
+    }
+
 }
