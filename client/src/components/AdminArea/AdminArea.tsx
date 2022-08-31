@@ -12,40 +12,7 @@ interface ChangObj {
 
 function AdminArea() {
     console.log('admin component');
-    const [records, setRecords] = useState<any[]>([]);
-    const [statusTypes, setStatusTypes] = useState<string[]>([]);
-    const [popup, setPopup] = useState<boolean>(false);
-    const [changObj, setChangeObg] = useState<ChangObj>();
 
-    // useEffect(() => {
-    //     fetch(`${base_url}/api/status-options`)
-    //         .then(response => response.json())
-    //         .then(data => {
-    //             setStatusTypes(data);
-    //         })
-    //         .catch(err => console.log(err));
-
-    // }, []);
-
-
-    const popUp = () => {
-        console.log('popup')
-        console.log(changObj)
-        return (
-            <div className="popup">
-                <h3>Are you sure you want to change record status?</h3>
-                <button onClick={() => {
-                    changObj!.target.value = changObj!.record.status;
-                    setPopup(false)
-                }}>No</button>
-                <button onClick={() => {
-                    changeStatus(changObj?.target, changObj?.record)
-                    setPopup(false);
-                }
-                }>Yes</button>
-            </div>
-        )
-    }
     const changeStatus = (target: any, record: any) => {
         console.log('change')
         const newStatus = target.value;
@@ -64,7 +31,6 @@ function AdminArea() {
     return (
         <section id="adminArea">
             <WeeklyCalendar></WeeklyCalendar>
-            {popup ? popUp() : ''}
         </section>
     )
 }

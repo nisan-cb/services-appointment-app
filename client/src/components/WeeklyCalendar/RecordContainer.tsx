@@ -8,18 +8,14 @@ interface PropI {
 }
 
 function RecordContainer({ data, date, time }: PropI) {
-    console.log(data);
     const { target, setMsg } = React.useContext(Target);
 
-
     const dragStart = (e: any) => {
-        // e.preventDefault();
-        console.log(e.target);
+        // console.log(e.target);
     };
 
     const dragEnter = (e: any) => {
         e.preventDefault();
-        // console.log('target ', e)
         target.current = {
             el: e.target,
             date: date,
@@ -27,9 +23,9 @@ function RecordContainer({ data, date, time }: PropI) {
         };
     };
     const onDrop = (e: any) => {
-        // e.preventDefault();
         console.log('dropped');
         if (target.current.el.dataset.target !== 'true') return;
+        const prevContainer = e.target.parentNode;
         target.current.el.append(e.target);
 
         // send request to update date and time
@@ -42,10 +38,15 @@ function RecordContainer({ data, date, time }: PropI) {
             })
         })
             .then(response => response.json())
-            .then(data => setMsg(data.msg))
-            .catch(err => console.log(err))
-
-
+            .then(data => {
+                prevContainer.setAttribute('data-target', 'true');
+                setMsg(data.msg)
+            })
+            .catch(err => {
+                // if unpossible update yhen return to prev cell
+                prevContainer.append(e.target);
+                console.log(err)
+            });
     };
 
 
@@ -59,6 +60,7 @@ function RecordContainer({ data, date, time }: PropI) {
                     <span>
                         <p>Name: {data.name}</p>
                         <p>Phone: {data.phone_number}</p>
+                        <p>Branch: {data.city}</p>
                         <p>Service: {data.description}</p>
                     </span>
                 </div>
@@ -69,6 +71,7 @@ function RecordContainer({ data, date, time }: PropI) {
         <div className="record-container"
             data-target={data ? false : true}
             onDragEnter={(e) => dragEnter(e)}
+            onDragOver={e => { e.preventDefault() }}
             onDragEnd={(e) => onDrop(e)}
         >
             {recordData()}

@@ -2,7 +2,7 @@ import { time } from "console";
 import React, { useEffect, useRef, useState } from "react";
 import Record from "./record";
 import RecordContainer from "./RecordContainer";
-
+import MyDate from "../../classes/date";
 import './weeklyCalendar.scss'
 
 const base_url = window.location.origin;
@@ -20,27 +20,29 @@ export const Target = React.createContext<any>(undefined);
 
 function WeeklyCalendar() {
     console.log('weekly calendar renderd')
-    const currentDate: Date | string = formatDate(new Date());
+    const currentDate: string = MyDate.dateToString(new Date);
 
-    const target = useRef();
-    const [msg, setMsg] = useState<string>('msg')
-    const [firstDay, setFirstDay] = useState<Date | string>(getFirstDayOfTheWeek(currentDate));
+    // state of message
+    const [msg, setMsg] = useState<string>('msg');
+    // state of first day to display
+    const [firstDay, setFirstDay] = useState<Date | string>(MyDate.getFirstDayOfTheWeek(currentDate));
+    // data structure of week include records
     const [week, setWeek] = useState<any>(getWeek(currentDate));
+    // time range to display in left side
     const [timeRange, setTimeRange] = useState<string[]>(getTimeRange());
+
+    //reference to target cell
+    const target = useRef();
 
 
     useEffect(() => {
-        // setWeek(getWeek(firstDay));
         const start: Date = new Date(firstDay);
         const end = new Date(start.setDate(start.getDate() + 6))
-        console.log(firstDay, ' - ', formatDate(end));
 
-        // if (!week?.length) return;
-        // fetch records between w dates 
-        fetch(`${base_url}/api/records/${firstDay}/${formatDate(end)}`)
+        // fetch records between 2 dates 
+        fetch(`${base_url}/api/records/${firstDay}/${MyDate.dateToString(end)}`)
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 setWeek(data.dict)
                 setTimeRange(data.timeRange)
 
@@ -51,60 +53,51 @@ function WeeklyCalendar() {
 
     const displayWeek = () => {
         return (
-
-            <>
-
-                <table>
-                    <tbody>
-                        <tr>
-                            <th >'......'</th>
-                            {
-                                Object.keys(week).map(day => {
-                                    return <th key={day}>{day}</th>
-                                })
-
-                            }
-                        </tr>
+            <table>
+                <tbody>
+                    <tr>
+                        <th >...</th>
                         {
-                            timeRange.map((time: string) => {
-                                return (
-                                    <tr key={time}>
-                                        <td className="time-td"><span>{time}</span></td>
-                                        {
-
-                                            Object.keys(week).map((date: string) => {
-                                                return <td key={date} className={date === currentDate ? 'today' : ''}>
-                                                    <RecordContainer date={date} time={time} data={week[date][time]}></RecordContainer>
-                                                </td>
-                                            })
-
-                                        }
-                                    </tr>
-                                )
-                            })
+                            Object.keys(week).map(day => <th key={day}>{day}</th>)
                         }
-                    </tbody>
-                </table>
+                    </tr>
+                    {
+                        timeRange.map((time: string) => {
+                            return (
+                                <tr key={time}>
+                                    <td className="time-td"><span>{time}</span></td>
+                                    {
+                                        Object.keys(week).map((date: string) => {
+                                            return <td key={date} className={date === currentDate ? 'today' : ''}>
+                                                <RecordContainer date={date} time={time} data={week[date][time]}></RecordContainer>
+                                            </td>
+                                        })
+                                    }
+                                </tr>
+                            )
+                        })
+                    }
+                </tbody>
+            </table>
 
-
-            </>
         )
     }
 
+    // get prev week
     const getPrev = () => {
         const currentFirstDay: Date = new Date(firstDay!);
         const newFirstDay = new Date(currentFirstDay.setDate(currentFirstDay.getDate() - 7));
-        setFirstDay(formatDate(newFirstDay));
-
+        setFirstDay(MyDate.dateToString(newFirstDay));
     }
 
+    // get next week
     const getNext = () => {
-        console.log('next')
-        const currentFirstDay: Date = new Date(firstDay!);
+        const currentFirstDay: Date = new Date(firstDay);
         const newFirstDay = new Date(currentFirstDay.setDate(currentFirstDay.getDate() + 7));
-        setFirstDay(formatDate(newFirstDay));
+        setFirstDay(MyDate.dateToString(newFirstDay));
     }
 
+    // display message if exist
     const displayMsg = () => {
         if (msg === '') return <></>
         setTimeout(() => {
@@ -113,7 +106,6 @@ function WeeklyCalendar() {
 
         return <div id='msg'>{msg}</div>
     }
-
 
 
     // return jsx
@@ -147,27 +139,20 @@ function WeeklyCalendar() {
 function getFirstDayOfTheWeek(d: Date | string) {
     const date = new Date(d);
     const result = new Date(date.setDate(date.getDate() - date.getDay()));
-    return formatDate(result);
+    return MyDate.dateToString(result);
 }
 
 // get all the week
-function getWeek(d: Date | string) {
+function getWeek(d: string) {
     const result: any = {};
-    const sunday = new Date(getFirstDayOfTheWeek(d));
-    result[formatDate(sunday)] = {}
+    const sunday = new Date(MyDate.getFirstDayOfTheWeek(new Date(d)));
+    result[MyDate.dateToString(sunday)] = {}
     while (sunday.setDate(sunday.getDate() + 1) && sunday.getDay() !== 0)
-        result[formatDate(sunday)] = {}
-    // result.push({ date: formatDate(new Date(sunday)), records: [] });
+        result[MyDate.dateToString(sunday)] = {}
     return result;
 }
 
-function formatDate(d: Date): string {
-    const year = d.getFullYear();
-    const month = d.getMonth() < 10 ? `0${d.getMonth() + 1}` : d.getMonth() + 1;
-    const day = d.getDate() < 10 ? `0${d.getDate()}` : d.getDate();
 
-    return `${year}-${month}-${day}`
-}
 
 function getTimeRange() {
     const result: string[] = [];
