@@ -1,34 +1,24 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { useState } from "react";
+import { DataObj } from './BookingForm';
 
-interface PropsI {
-    date: Date | undefined,
-    setDate: any,
-    time: any,
-    setTime: any
-}
 
-const base_url = window.location.origin;
+function DateSelection() {
+    const { appointmentData, setAppointmentData } = React.useContext(DataObj);
 
-function DateSelection({ date = new Date(), time, setTime, setDate }: PropsI) {
-    console.log('dateSelection render');
+
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     var yearMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
     // get today date without time
     let today = new Date(new Date().setHours(0, 0, 0, 0));
 
-    //
-    const choosenDateTimeEls = useRef({ date: undefined, time: undefined });
-
-
-    const [dateToDisplay, setDateToDisplay] = useState(date);
+    const [dateToDisplay, setDateToDisplay] = useState(new Date(appointmentData.date));
     const [possibleTime, setPossibleTime] = useState<any[]>([]);
     const year = dateToDisplay.getFullYear();
     const month = dateToDisplay.getMonth();
 
 
     const getDays = (): Date[] => {
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
         const daysOfPrevMonth = new Date(year, month, 1).getDay();
         const days = []
         for (let i = 1 - daysOfPrevMonth; i <= 42 - daysOfPrevMonth; i++)
@@ -38,11 +28,14 @@ function DateSelection({ date = new Date(), time, setTime, setDate }: PropsI) {
 
     const updateDate = (d: any) => {
         console.log(d.toLocaleDateString());
-        setDate(new Date(d));
-        setTime({ h: undefined, m: undefined });
+        setAppointmentData((prev: any) => ({
+            ...prev,
+            date: new Date(d).toLocaleDateString(),
+            time: { h: undefined, m: undefined }
+        }))
 
         // fetch possible meeting time in this day
-        fetch(`${base_url}/api/get-possible-meeting-time/${d.toLocaleDateString().replaceAll('/', '-')}`)
+        fetch(`/api/get-possible-meeting-time/${d.toLocaleDateString().replaceAll('/', '-')}`)
             .then(respone => respone.json())
             .then(data => setPossibleTime(data))
             .catch(err => console.log(err));
@@ -56,7 +49,7 @@ function DateSelection({ date = new Date(), time, setTime, setDate }: PropsI) {
                 id={d.getTime() === today.getTime() ? 'today' : ''}
                 className={'day'
                     + ((d.getMonth() === month) ? ' curr-month' : '')
-                    + (date.getTime() === d.getTime() ? ' selected' : '')
+                    + (new Date(appointmentData.date).getTime() === d.getTime() ? ' selected' : '')
                 }
                 onClick={() => updateDate(d)}
             >{d.getDate()}</td>
@@ -87,8 +80,8 @@ function DateSelection({ date = new Date(), time, setTime, setDate }: PropsI) {
             const m = t.m < 10 ? `0${t.m}` : `${t.m}`;
             result.push(<li
                 key={i}
-                className={(t.h === time.h && t.m === time.m) ? 'selected' : ''}
-                onClick={() => setTime(t)} >{h + ':' + m}</li>);
+                className={(t.h === appointmentData.time.h && t.m === appointmentData.time.m) ? 'selected' : ''}
+                onClick={() => setAppointmentData((prev: any) => ({ ...prev, time: t }))} >{h + ':' + m}</li>);
         });
         return result;
 

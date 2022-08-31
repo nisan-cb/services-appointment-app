@@ -72,21 +72,21 @@ export const updateRecordStatus = async (req: Request, res: Response) => {
 export const insertNewRecord = async (req: Request, res: Response) => {
     console.log(req.body)
     // let service, branch, client_id, client_nmae, phone_number;
-    const { service, branch, client_id, client_name, phone_number, date, time } = req.body
+    const { service, branch, id, name, phoneNumber, date, time } = req.body
     console.log(date);
     const t = `${time.h}:${time.m}`;
     try {
         // check if client exist in the system
-        const client = await db.getClientById(client_id);
+        const client = await db.getClientById(id);
 
         // if new client, add him to the system
         if (client.rowCount === 0) // new client
-            await db.insertNewClient(client_id, client_name, phone_number)
+            await db.insertNewClient(id, name, phoneNumber)
         else
             console.log('client exist in DB');
 
         // finaly add new record
-        await db.insertNewRecord(branch, service, client_id, date, t);
+        await db.insertNewRecord(branch, service, id, date, t);
         res.json({ msg: 'new record inserted' });
     } catch (error) {
         console.log(error);

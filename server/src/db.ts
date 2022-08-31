@@ -107,6 +107,7 @@ export default class DB {
 
     // insert new record
     async insertNewRecord(branch_code: number, service_code: number, client_id: number, date: Date, time: any) {
+        console.log(client_id)
         await this.client.query(
             'INSERT INTO records (branch_code, client_id, service_code, date, time) VALUES ($1,$2,$3, $4, $5)',
             [branch_code, client_id, service_code, date, time]

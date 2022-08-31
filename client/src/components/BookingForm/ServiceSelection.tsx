@@ -1,14 +1,14 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
+import { DataObj } from './BookingForm'
 interface PropsI {
     servicesList: any[],
-    setService: Dispatch<SetStateAction<null | number>>,
-    service: number | null
 }
 
-function ServicesSelection({ servicesList, setService, service }: PropsI) {
-    console.log('services ')
+function ServicesSelection({ servicesList }: PropsI) {
+    const { appointmentData, setAppointmentData } = React.useContext(DataObj);
+
     const select = (code: number) => {
-        setService(code);
+        setAppointmentData((prev: any) => ({ ...prev, service: code }))
     }
 
     return (
@@ -20,7 +20,7 @@ function ServicesSelection({ servicesList, setService, service }: PropsI) {
                         return <li
                             value={item.code}
                             key={item.code}
-                            className={item.code === service ? 'selected' : ''}
+                            className={item.code === appointmentData?.service ? 'selected' : ''}
                             onClick={() => { select(item.code) }}
 
                         >{item.description}</li>

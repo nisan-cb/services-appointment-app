@@ -1,11 +1,20 @@
 import React from "react";
+import { DataObj } from './BookingForm';
 
-interface PropsI {
-    clientData: any,
-    seters: any
-}
 
-function ClientDetails({ clientData, seters }: PropsI) {
+function ClientDetails() {
+    const { appointmentData, setAppointmentData } = React.useContext(DataObj);
+
+    const update = (e: any) => {
+        console.log(appointmentData)
+        console.log(e.target.name)
+        setAppointmentData((prev: any) => (
+            {
+                ...prev,
+                [e.target.name]: e.target.value
+            }
+        ))
+    }
 
     return (
         <div id='client-data-box' >
@@ -13,15 +22,15 @@ function ClientDetails({ clientData, seters }: PropsI) {
             <h2>Client Details</h2>
             <label htmlFor="id">
                 <p>Id</p>
-                <input type="text" placeholder="id" name="id" onChange={e => seters.setId(e.target.value)} value={clientData.id} />
+                <input type="text" placeholder="id" name="id" onChange={e => update(e)} value={appointmentData.id || ''} />
             </label>
             <label htmlFor="name">
                 <p>Name</p>
-                <input type="text" placeholder="name" name="name" onChange={e => seters.setName(e.target.value)} value={clientData.name} />
+                <input type="text" placeholder="name" name="name" onChange={e => update(e)} value={appointmentData.name || ''} />
             </label>
             <label htmlFor="phoneNumber">
                 <p>Phone number</p>
-                <input type="text" placeholder="phone number" name="phoneNumber" onChange={e => seters.setPhoneNunber(e.target.value)} value={clientData.phoneNumber} />
+                <input type="text" placeholder="phone number" name="phoneNumber" onChange={e => update(e)} value={appointmentData.phoneNumber || ''} />
             </label>
         </div>
     )

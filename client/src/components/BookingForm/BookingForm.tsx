@@ -1,10 +1,11 @@
-import { createContext, Dispatch, SetStateAction, useContext, useState } from 'react';
+import React, { createContext, Dispatch, SetStateAction, useState } from 'react';
 import './BookingForm.scss';
 import BranchSelection from './BranchSelection';
 import ClientDetails from './ClientDetails';
 import DateSelection from './DateSelection';
 import ServicesSelection from './ServiceSelection';
 
+export const DataObj = createContext<any>(undefined);
 
 interface FormProps {
     servicesList: any[],
@@ -13,19 +14,19 @@ interface FormProps {
     submitHandler: (e: any, appiontmentData: any) => void
 }
 
-export const dataContext = createContext({});
 
 function BookingForm({ servicesList, branchesList, setMsg, submitHandler }: FormProps) {
     const [currentStep, setCurrentStep] = useState(1);
 
-    // appointment data
-    const [service, setService] = useState<number | null>(null);
-    const [branch, setBranch] = useState<number | null>(null);
-    const [id, setId] = useState<string | undefined>('');
-    const [name, setName] = useState<string | undefined>('');
-    const [phoneNumber, setPhoneNunber] = useState<string | undefined>('');
-    const [date, setDate] = useState<Date | undefined>(new Date(new Date().setHours(0, 0, 0, 0)));
-    const [time, setTime] = useState<any>({ h: undefined, m: undefined });
+    const [appointmentData, setAppointmentData] = useState<any>({
+        service: undefined,
+        branch: undefined,
+        id: undefined,
+        name: undefined,
+        phoneNumber: undefined,
+        date: new Date(),
+        time: undefined
+    });
 
     // go back to previous step
     const prevStep = () => {
@@ -38,45 +39,37 @@ function BookingForm({ servicesList, branchesList, setMsg, submitHandler }: Form
     }
 
     const submit = (e: any) => {
-        console.log(date?.toLocaleDateString());
-        submitHandler(e, {
-            service: service,
-            branch: branch,
-            client_id: id,
-            client_name: name,
-            phone_number: phoneNumber,
-            date: date?.toLocaleDateString(),
-            time: time
-        })
+        console.log(appointmentData);
+        submitHandler(e, appointmentData)
     }
 
     // check which step to display
     const getCurrentStep = () => {
         switch (currentStep) {
             case 1:
-                return <ServicesSelection servicesList={servicesList} setService={setService} service={service}></ServicesSelection>
+                return <ServicesSelection servicesList={servicesList}></ServicesSelection>
             case 2:
-                return <BranchSelection branchesList={branchesList} setBranch={setBranch} branch={branch}></BranchSelection>
+                return <BranchSelection branchesList={branchesList}></BranchSelection>
             case 3:
-                return <DateSelection date={date} time={time} setTime={setTime} setDate={setDate}></DateSelection>
+                return <DateSelection ></DateSelection>
             case 4:
-                return <ClientDetails clientData={{ id, name, phoneNumber }} seters={{ setId, setName, setPhoneNunber }}></ClientDetails>
+                return <ClientDetails ></ClientDetails>
             default:
                 return <></>
         }
     }
 
     return (
-        // <dataContext.Provider value={ }>
-        <div id="booking-form">
-            {getCurrentStep()}
-            <div className='btn-area'>
-                {currentStep > 1 ? <span onClick={prevStep} className='btn prev'>Prev</span> : <></>}
-                {currentStep < 4 ? <span onClick={nextStep} className='btn next'>Next</span> : <></>}
-                {currentStep === 4 ? <span onClick={submit} className='btn submit'>Submit</span> : <></>}
+        <DataObj.Provider value={{ appointmentData, setAppointmentData }}>
+            <div id="booking-form">
+                {getCurrentStep()}
+                <div className='btn-area'>
+                    {currentStep > 1 ? <span onClick={prevStep} className='btn prev'>Prev</span> : <></>}
+                    {currentStep < 4 ? <span onClick={nextStep} className='btn next'>Next</span> : <></>}
+                    {currentStep === 4 ? <span onClick={submit} className='btn submit'>Submit</span> : <></>}
+                </div>
             </div>
-        </div>
-        // </dataContext.Provider>
+        </DataObj.Provider>
     )
 
 }

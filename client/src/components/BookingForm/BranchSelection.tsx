@@ -1,16 +1,14 @@
-import React, { Dispatch, SetStateAction } from "react";
-
+import React, { useContext } from "react";
+import { DataObj } from './BookingForm';
 interface PropsI {
     branchesList: any[],
-    setBranch: Dispatch<SetStateAction<number | null>>,
-    branch: number | null,
 }
 
-function BranchSelection({ branchesList, setBranch, branch }: PropsI) {
+function BranchSelection({ branchesList }: PropsI) {
+    const { appointmentData, setAppointmentData } = useContext(DataObj);
 
-    console.log('branches')
     const select = (code: number) => {
-        setBranch(code);
+        setAppointmentData((prev: any) => ({ ...prev, branch: code }))
     }
 
 
@@ -23,7 +21,7 @@ function BranchSelection({ branchesList, setBranch, branch }: PropsI) {
                         return <li
                             value={item.code}
                             key={item.code}
-                            className={item.code === branch ? 'selected' : ''}
+                            className={item.code === appointmentData.branch ? 'selected' : ''}
                             onClick={() => select(item.code)}
                         >{item.city}</li>
 

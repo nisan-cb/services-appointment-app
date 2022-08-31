@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import BookingForm from "../BookingForm/BookingForm";
 import './appointmentPage.scss'
 
-const base_url = window.location.origin;
 
 function AppiontmentPage() {
     console.log('appointment page render')
@@ -13,13 +12,13 @@ function AppiontmentPage() {
     // run one time in first render
     useEffect(() => {
         // get all services type from server
-        fetch(`${base_url}/api/services`)
+        fetch(`/api/services`)
             .then(response => response.json())
             .then(data => { setServicesList(data) })
             .catch(err => console.log(err));
 
         // get all branches from server
-        fetch(`${base_url}/api/branches`)
+        fetch(`/api/branches`)
             .then(response => response.json())
             .then(data => setBranchesList(data))
             .catch(err => console.log(err));
@@ -28,9 +27,9 @@ function AppiontmentPage() {
     // run when click on submit
     const submitHandler = (e: any, appiontmentData: any) => {
         e.preventDefault();
-        console.log(appiontmentData)
+        console.log('***', appiontmentData)
         // sent POST request to server
-        fetch(`${base_url}/api/insertNewRecord`, {
+        fetch(`/api/insertNewRecord`, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -56,9 +55,8 @@ function AppiontmentPage() {
     }
 
     const goToAdminArea = () => {
-        window.open(`${base_url}/admin`, '_blank')?.focus();
+        window.open(`/admin`, '_blank')?.focus();
     }
-
 
     return (
         <section id='appointmentPage'>
@@ -70,8 +68,6 @@ function AppiontmentPage() {
                 submitHandler={submitHandler}
             ></BookingForm>
             {displayMsg(msg)}
-
-
         </section >
     )
 }
