@@ -27,7 +27,6 @@ function DateSelection() {
     }
 
     const updateDate = (d: any) => {
-        console.log(d.toLocaleDateString());
         setAppointmentData((prev: any) => ({
             ...prev,
             date: new Date(d).toLocaleDateString(),
