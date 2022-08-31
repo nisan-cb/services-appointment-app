@@ -73,7 +73,7 @@ function WeeklyCalendar() {
                                         {
 
                                             Object.keys(week).map((date: string) => {
-                                                return <td key={date}>
+                                                return <td key={date} className={date === currentDate ? 'today' : ''}>
                                                     <RecordContainer date={date} time={time} data={week[date][time]}></RecordContainer>
                                                 </td>
                                             })
