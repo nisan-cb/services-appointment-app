@@ -1,26 +1,13 @@
-import { time } from "console";
 import React, { useEffect, useRef, useState } from "react";
-import Record from "./record";
 import RecordContainer from "./RecordContainer";
 import MyDate from "../../classes/date";
 import './weeklyCalendar.scss'
-
-const base_url = window.location.origin;
-
-interface ChangObj {
-    target: HTMLSelectElement,
-    record: any
-}
-interface Day {
-    date: string,
-    records: any[]
-}
 
 export const Target = React.createContext<any>(undefined);
 
 function WeeklyCalendar() {
     console.log('weekly calendar renderd')
-    const currentDate: string = MyDate.dateToString(new Date);
+    const currentDate: string = MyDate.dateToString(new Date());
 
     // state of message
     const [msg, setMsg] = useState<string>('msg');
@@ -40,7 +27,7 @@ function WeeklyCalendar() {
         const end = new Date(start.setDate(start.getDate() + 6))
 
         // fetch records between 2 dates 
-        fetch(`${base_url}/api/records/${firstDay}/${MyDate.dateToString(end)}`)
+        fetch(`/api/records/${firstDay}/${MyDate.dateToString(end)}`)
             .then(response => response.json())
             .then(data => {
                 setWeek(data.dict)
@@ -135,13 +122,6 @@ function WeeklyCalendar() {
 
 // more fonctions 
 
-// get first day date in same week like d 
-function getFirstDayOfTheWeek(d: Date | string) {
-    const date = new Date(d);
-    const result = new Date(date.setDate(date.getDate() - date.getDay()));
-    return MyDate.dateToString(result);
-}
-
 // get all the week
 function getWeek(d: string) {
     const result: any = {};
@@ -164,12 +144,6 @@ function getTimeRange() {
     return result;
 
 }
-function timeFormat(t: any) {
-    const h = t.hour < 10 ? `0${t.hour}` : t.hour
-    const m = t.minuts < 10 ? `0${t.minuts}` : t.minuts
-    return `${h}:${m}`;
-}
-
 
 
 export default WeeklyCalendar;

@@ -43,7 +43,7 @@ function RecordContainer({ data, date, time }: PropI) {
                 setMsg(data.msg)
             })
             .catch(err => {
-                // if unpossible update yhen return to prev cell
+                // if impossible update yhen return to prev cell
                 prevContainer.append(e.target);
                 console.log(err)
             });
@@ -67,6 +67,8 @@ function RecordContainer({ data, date, time }: PropI) {
             )
         else return
     }
+
+
     return (
         <div className="record-container"
             data-target={data ? false : true}

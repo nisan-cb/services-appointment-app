@@ -1,8 +1,7 @@
-import React, { ChangeEvent, ReactElement, ReactHTMLElement, useEffect, useState } from "react";
+import React from "react";
 
 import './thankPage.scss'
 
-const base_url = window.location.origin;
 
 interface PropsI {
     msg: string
