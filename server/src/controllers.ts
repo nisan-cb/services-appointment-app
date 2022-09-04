@@ -118,6 +118,7 @@ export const updateDateAndTime = async (req: Request, res: Response) => {
         const result = await db.updateRecordDateAndTime(recordNumber, destDate, destTime);
         // console.log(result)
     } catch (error) {
+
         console.log('error', error);
         res.send({ msg: 'update failed' })
     }
@@ -127,8 +128,16 @@ export const updateDateAndTime = async (req: Request, res: Response) => {
 //  delete record controller
 export const deleteRecord = async (req: Request, res: Response) => {
     const recordNumber = Number(req.params.recordNumber);
-    const result = await db.deleteRecord(recordNumber);
-    if (result.rowCount)
-        res.send({ msg: true });
-    res.send({ msg: false });
+
+    try {
+        const result = await db.deleteRecord(recordNumber);
+        if (result.rowCount)
+            res.send({ msg: true });
+
+    } catch (error) {
+        console.log(error)
+        res.send({ msg: false });
+    }
+
+
 }

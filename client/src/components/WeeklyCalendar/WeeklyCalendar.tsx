@@ -11,7 +11,7 @@ function WeeklyCalendar() {
     const currentDate: string = MyDate.dateToString(new Date());
 
     // state of message
-    const [msg, setMsg] = useState<string>('msg');
+    const [msg, setMsg] = useState<string>('');
     // state of first day to display
     const [firstDay, setFirstDay] = useState<Date | string>(MyDate.getFirstDayOfTheWeek(currentDate));
     // data structure of week include records

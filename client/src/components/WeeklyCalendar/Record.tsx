@@ -81,6 +81,7 @@ function Record({ data }: PropI) {
 
     return (
         <div className={"record " + (data.status).replace(' ', '-')}
+            // id={currRecord === data.number ? 'view' : ''}
             draggable
             onDragStart={(e) => dragStart(e)}
             onClick={e => onClick(e)}
