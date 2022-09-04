@@ -3,7 +3,6 @@ import RecordContainer from "./RecordContainer";
 import MyDate from "../../classes/date";
 import './weeklyCalendar.scss'
 import Record from "./Record";
-import PopUp from "./PopUp";
 
 export const Target = React.createContext<any>(undefined);
 
@@ -22,10 +21,8 @@ function WeeklyCalendar() {
     // list of all status types
     const [statusTypes, setStatusTypes] = useState<string[]>([]);
 
-    //reference to target cell
-    const target = useRef();
     // current record that draged
-    const currentRecord = useRef();
+    const draggedRecord = useRef();
     const [currRecord, setCurrRecord] = useState(1);
     console.log(week);
 
@@ -55,7 +52,6 @@ function WeeklyCalendar() {
     }, [firstDay]);
 
     const displayWeek = () => {
-        console.log('****************************')
         return (
             <table>
                 <tbody>
@@ -127,7 +123,7 @@ function WeeklyCalendar() {
                 </div>
                 <button id="next-btn" onClick={(getNext)}>next</button>
             </div>
-            <Target.Provider value={{ target, currentRecord, setMsg, currRecord, setCurrRecord, statusTypes, setWeek }}>
+            <Target.Provider value={{ draggedRecord, setMsg, currRecord, setCurrRecord, statusTypes, setWeek }}>
                 <div id="weeklyCalendar">
                     {displayWeek()}
                     {displayMsg()}

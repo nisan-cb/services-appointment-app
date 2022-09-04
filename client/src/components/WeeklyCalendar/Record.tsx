@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { Target } from './WeeklyCalendar'
 
-import statusIcon from '../../images/status.png'
-import drag from '../../images/drag.png'
-import msgIcon from '../../images/msg.png'
-import { dblClick } from "@testing-library/user-event/dist/click";
-
 interface PropI {
     data: any;
 }
@@ -13,16 +8,17 @@ interface PropI {
 
 
 function Record({ data }: PropI) {
-    const { currentRecord, currRecord, setCurrRecord, statusTypes, setWeek } = React.useContext(Target);
-    console.log(data);
+    const { draggedRecord, currRecord, setCurrRecord, statusTypes, setWeek } = React.useContext(Target);
+
     const dragStart = (e: any) => {
-        currentRecord.current = {
+        draggedRecord.current = {
             el: e.target,
             data: data
         }
     };
 
     const onClick = (e: any) => {
+        console.log('clicked')
         e.stopPropagation();
         if (currRecord === data.number)
             setCurrRecord(undefined);
@@ -41,6 +37,7 @@ function Record({ data }: PropI) {
     const call = () => {
         console.log('calling')
     }
+
     const updateStatus = (newStatus: string) => {
         console.log('status')
         fetch(`/api/update-record-status/${data.number}/${newStatus}`,
@@ -51,7 +48,6 @@ function Record({ data }: PropI) {
             .then(response => response.json())
             .then(msgObj => {
                 console.log(msgObj)
-                console.log(data)
                 if (msgObj.msg === true) {
                     data = { ...data, ['status']: newStatus }
                     setWeek((prev: any) => ({
@@ -76,15 +72,17 @@ function Record({ data }: PropI) {
             onMouseUp={(e: any) => e.target.classList.remove('in-air')}
         >
             <span>
-                <p>No: {data.number}</p>
                 <p>Name: {data.name}</p>
                 <p>Phone: {data.phone_number}</p>
                 <p>Branch: {data.city}</p>
                 <p>Service: {data.description}</p>
             </span>
             {currRecord === data.number ? actions() : undefined}
+            <div className="tooltip">{data.status}</div>
         </div >
     )
 }
 
 export default Record;
+
+

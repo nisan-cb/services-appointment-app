@@ -112,7 +112,7 @@ export const updateDateAndTime = async (req: Request, res: Response) => {
     // first check in DB if not exist record in same date and time
     const check = await db.getRecordsByDateAndTime(destDate, destTime);
     if (check.rowCount)
-        res.send({ msg: 'update failed' });
+        res.send({ msg: false });
     // then update the record by new dest-date and dest-time
     try {
         const result = await db.updateRecordDateAndTime(recordNumber, destDate, destTime);
@@ -121,5 +121,5 @@ export const updateDateAndTime = async (req: Request, res: Response) => {
         console.log('error', error);
         res.send({ msg: 'update failed' })
     }
-    res.send({ msg: 'update completed' });
+    res.send({ msg: true });
 }

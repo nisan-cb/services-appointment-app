@@ -1,50 +1,55 @@
 import React from "react";
-import { JsxChild } from "typescript";
+import Record from "./Record";
 import { Target } from './WeeklyCalendar'
 
 interface PropI {
-    // data: any;
     date: string;
     time: string;
     children: React.ReactNode;
 }
 
 function RecordContainer({ date, time, children }: PropI) {
-    const { target, currentRecord, setMsg, setCurrRecord } = React.useContext(Target);
-
-    const dragEnter = (e: any) => {
-        e.preventDefault();
-        target.current = {
-            el: e.target,
-            date: date,
-            time: time
-        };
-    };
+    const { draggedRecord, setMsg, setCurrRecord, setWeek } = React.useContext(Target);
 
     const onDrop = (e: any) => {
         console.log('dropped');
-        e.target.classList.remove('in-air')
-        if (target.current.el.dataset.target !== 'true') return;
-        const prevContainer = e.target.parentNode;
-        target.current.el.append(e.target);
-
+        console.log(draggedRecord);
+        draggedRecord.current.el.classList.remove('in-air')
+        // check if valid cell
+        if (e.target.dataset.target !== 'true') return;
+        // remember prev date and time
+        const prevDate = draggedRecord.current.data.date
+        const prevTime = draggedRecord.current.data.time
+        console.log('prev : ', prevDate, prevTime);
+        console.log('new : ', date, time);
+        draggedRecord.current.data = { ...draggedRecord.current.data, 'date': date, 'time': time }
+        // update new cell
+        setWeek((prev: any) => ({
+            ...prev,
+            [date]: { ...prev[date], [time]: draggedRecord.current.data },
+        }))
+        // update prev cell
+        setWeek((prev: any) => ({
+            ...prev,
+            [prevDate]: { ...prev[prevDate], [prevTime]: undefined }
+        }))
         // send request to update date and time
-        fetch(`/api/update-date-time/${currentRecord.current.data.number}`, {
+        fetch(`/api/update-date-time/${draggedRecord.current.data.number}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                destDate: target.current.date,
-                destTime: target.current.time
+                destDate: date,
+                destTime: time
             })
         })
             .then(response => response.json())
             .then(data => {
-                prevContainer.setAttribute('data-target', 'true');
-                setMsg(data.msg)
+                if (data.msg === true)
+                    setMsg('update completed');
+                else
+                    setMsg('update failed');
             })
             .catch(err => {
-                // if impossible update yhen return to prev cell
-                prevContainer.append(e.target);
                 console.log(err)
             });
     };
@@ -53,9 +58,8 @@ function RecordContainer({ date, time, children }: PropI) {
     return (
         <div className="record-container"
             data-target={children ? false : true}
-            onDragEnter={(e) => dragEnter(e)}
             onDragOver={e => { e.preventDefault() }}
-            onDragEnd={(e) => onDrop(e)}
+            onDrop={e => onDrop(e)}
             onClick={e => setCurrRecord(undefined)}
         >
             {children}
