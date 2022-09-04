@@ -18,7 +18,6 @@ function AddPopUP({ date, time }: PropI) {
 
     const [anyClientData, setAnyClinetData] = useState<string>('');
     const [top5results, setTop5results] = useState<any[]>([])
-    console.log(top5results);
 
     const recordData = useRef<any>({ id: undefined, service: undefined, branch: undefined });
 
@@ -41,7 +40,6 @@ function AddPopUP({ date, time }: PropI) {
 
     useEffect(() => {
         const firstChar = Number(anyClientData.slice(0, 1));
-        console.log(isNaN(firstChar))
         let filterList = [];
         if (isNaN(firstChar))  //string
             filterList = clientList.filter(c => c.name.startsWith(anyClientData));
@@ -56,7 +54,6 @@ function AddPopUP({ date, time }: PropI) {
     const createRecord = () => {
         const { id, branch, service } = recordData.current;
         recordData.current = { ...recordData.current, 'date': date, 'time': time }
-        console.log(recordData.current);
         if (!id || !branch || !service) return;
         fetch('/api/addRecord', {
             method: 'POST',
@@ -99,7 +96,7 @@ function AddPopUP({ date, time }: PropI) {
                 </div>
             </div>
 
-            <select name="service" id="" value={0}
+            <select name="service" id="" defaultValue={0}
                 onChange={(e) => { recordData.current = { ...recordData.current, 'service': e.target.value } }}
             >
                 <option value={0} disabled >select service type</option>
@@ -108,7 +105,7 @@ function AddPopUP({ date, time }: PropI) {
                 >{s.description}</option>)}
             </select>
 
-            <select name="branches" id="" value={0}
+            <select name="branches" id="" defaultValue={0}
                 onChange={(e) => recordData.current = { ...recordData.current, 'branch': e.target.value }}
             >
                 <option value={0} disabled>select city</option>
