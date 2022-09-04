@@ -32,9 +32,12 @@ export const getRecordsBetween2Dates = async (req: Request, res: Response) => {
     }
     records?.rows.forEach(record => {
         const date = MyDate.DateToString(record.date);
-        const time = record.time.slice(0, 5);
-        dict[date][time] = record;
+        record.date = date;
+        record.time = record.time.slice(0, 5);
+        dict[date][record.time] = record;
     });
+    console.log(dict)
+
 
     res.send({ dict: dict, timeRange: Time.arrToArr(timeRange) })
 }
@@ -66,6 +69,7 @@ export const updateRecordStatus = async (req: Request, res: Response) => {
     const recordNumber = Number(req.params.recordNumber)
     const newStatus = req.params.newstatus
     const result = await db.updateRecordStatus(newStatus, recordNumber);
+    res.send({ msg: result });
 }
 
 // inserts new record to DB

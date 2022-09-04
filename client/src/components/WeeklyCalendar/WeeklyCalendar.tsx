@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import RecordContainer from "./RecordContainer";
 import MyDate from "../../classes/date";
 import './weeklyCalendar.scss'
+import Record from "./Record";
+import PopUp from "./PopUp";
 
 export const Target = React.createContext<any>(undefined);
 
@@ -17,10 +19,24 @@ function WeeklyCalendar() {
     const [week, setWeek] = useState<any>(getWeek(currentDate));
     // time range to display in left side
     const [timeRange, setTimeRange] = useState<string[]>(getTimeRange());
+    // list of all status types
+    const [statusTypes, setStatusTypes] = useState<string[]>([]);
 
     //reference to target cell
     const target = useRef();
+    // current record that draged
+    const currentRecord = useRef();
+    const [currRecord, setCurrRecord] = useState(1);
+    console.log(week);
 
+    useEffect(() => {
+        // get all status options
+        fetch('/api/status-options')
+            .then(res => res.json())
+            .then(data => setStatusTypes(data))
+            .catch(err => console.log(err));
+
+    }, []);
 
     useEffect(() => {
         const start: Date = new Date(firstDay);
@@ -39,6 +55,7 @@ function WeeklyCalendar() {
     }, [firstDay]);
 
     const displayWeek = () => {
+        console.log('****************************')
         return (
             <table>
                 <tbody>
@@ -56,7 +73,9 @@ function WeeklyCalendar() {
                                     {
                                         Object.keys(week).map((date: string) => {
                                             return <td key={date} className={date === currentDate ? 'today' : ''}>
-                                                <RecordContainer date={date} time={time} data={week[date][time]}></RecordContainer>
+                                                <RecordContainer date={date} time={time} >
+                                                    {week[date][time] ? <Record data={week[date][time]}></Record> : undefined}
+                                                </RecordContainer>
                                             </td>
                                         })
                                     }
@@ -108,7 +127,7 @@ function WeeklyCalendar() {
                 </div>
                 <button id="next-btn" onClick={(getNext)}>next</button>
             </div>
-            <Target.Provider value={{ target, setMsg }}>
+            <Target.Provider value={{ target, currentRecord, setMsg, currRecord, setCurrRecord, statusTypes, setWeek }}>
                 <div id="weeklyCalendar">
                     {displayWeek()}
                     {displayMsg()}
@@ -133,7 +152,6 @@ function getWeek(d: string) {
 }
 
 
-
 function getTimeRange() {
     const result: string[] = [];
     for (let i = 6; i <= 23; i++) {
@@ -142,7 +160,6 @@ function getTimeRange() {
         result.push(`${h}:30`);
     }
     return result;
-
 }
 
 

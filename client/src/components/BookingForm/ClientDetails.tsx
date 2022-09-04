@@ -6,8 +6,6 @@ function ClientDetails() {
     const { appointmentData, setAppointmentData } = React.useContext(DataObj);
 
     const update = (e: any) => {
-        console.log(appointmentData)
-        console.log(e.target.name)
         setAppointmentData((prev: any) => (
             {
                 ...prev,

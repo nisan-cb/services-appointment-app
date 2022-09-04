@@ -39,7 +39,6 @@ function BookingForm({ servicesList, branchesList, setMsg, submitHandler }: Form
     }
 
     const submit = (e: any) => {
-        console.log(appointmentData);
         submitHandler(e, appointmentData)
     }
 
