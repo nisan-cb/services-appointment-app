@@ -123,3 +123,12 @@ export const updateDateAndTime = async (req: Request, res: Response) => {
     }
     res.send({ msg: true });
 }
+
+//  delete record controller
+export const deleteRecord = async (req: Request, res: Response) => {
+    const recordNumber = Number(req.params.recordNumber);
+    const result = await db.deleteRecord(recordNumber);
+    if (result.rowCount)
+        res.send({ msg: true });
+    res.send({ msg: false });
+}

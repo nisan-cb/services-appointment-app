@@ -26,10 +26,26 @@ function Record({ data }: PropI) {
             setCurrRecord(data.number);
     }
 
+    const deleteRecord = (e: any) => {
+        fetch(`/api/delete-record/${data.number}`, {
+            method: 'DELETE'
+        })
+            .then(res => res.json())
+            .then(msgRes => {
+                if (msgRes.msg === true)
+                    setWeek((prev: any) => ({
+                        ...prev,
+                        [data.date]: { ...prev[data.date], [data.time]: undefined }
+                    }))
+            })
+            .then(err => console.log(err));
+    }
+
     const actions = () => {
         return (
             <ul className="status-type-list">
                 {statusTypes.map((s: string) => <li key={s} onClick={() => updateStatus(s)}>{s}</li>)}
+                <li className="delete-record-btn" onClick={e => deleteRecord(e)}>Delete</li>
             </ul>
         );
     }

@@ -14,7 +14,8 @@ import {
     updateRecordStatus,
     insertNewRecord,
     getPossibleTimes,
-    updateDateAndTime
+    updateDateAndTime,
+    deleteRecord,
 } from './controllers';
 
 const app: Express = express();
@@ -70,6 +71,9 @@ app.get('/api/get-possible-meeting-time/:date', getPossibleTimes);
 
 // endpoint to update date and time of record
 app.post('/api/update-date-time/:recordNumber', updateDateAndTime)
+
+// endpoint to delete  record
+app.delete('/api/delete-record/:recordNumber', deleteRecord)
 
 
 // default endpoint

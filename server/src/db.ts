@@ -243,8 +243,15 @@ export default class DB {
     // update record date and time
     async updateRecordDateAndTime(id: number, d: string, t: string) {
         console.log('d : ', new Date(d));
-        const result = this.client.query('update records set date = $1::date , time = $2  where number = $3',
+        const result = await this.client.query('update records set date = $1::date , time = $2  where number = $3',
             [d, t, id]);
+        return result;
+    }
+
+    // delete record from db
+    async deleteRecord(id: number) {
+        const result = await this.client.query('delete from records where number = $1',
+            [id]);
         return result;
     }
 

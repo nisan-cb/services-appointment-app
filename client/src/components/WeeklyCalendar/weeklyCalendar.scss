@@ -52,6 +52,7 @@
     .record.in-process{
         background-color: rgb(255, 255, 0);
     }
+    
     .record{
         border: 1px solid rgba(0, 0, 0, 0);
         background-color: rgb(231, 225, 225);
@@ -119,6 +120,9 @@
         li:hover{
             --p: 100%;
             color: #fff;
+        }
+        .delete-record-btn{
+            background: linear-gradient(red 0 0) var(--p, 0) / var(--p, 0) no-repeat;
         }
     }
 
