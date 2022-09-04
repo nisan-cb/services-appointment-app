@@ -16,6 +16,8 @@ import {
     getPossibleTimes,
     updateDateAndTime,
     deleteRecord,
+    getClientsList,
+    addRecord
 } from './controllers';
 
 const app: Express = express();
@@ -57,6 +59,9 @@ app.get('/api/services', getServicesTypes);
 // endpoint to get list of all branches
 app.get('/api/branches', getBranchesList);
 
+// endpoint to get list of all clients
+app.get('/api/clients', getClientsList);
+
 // endpoint to get all status options
 app.get('/api/status-options', getStatusOptions)
 
@@ -66,6 +71,9 @@ app.put('/api/update-record-status/:recordNumber/:newstatus', updateRecordStatus
 // endpoint to insert new record
 app.post('/api/insertNewRecord', insertNewRecord)
 
+// endpoint to insert new record - exist client
+app.post('/api/addRecord', addRecord)
+
 // endpoint to get possible meeting time in specific date
 app.get('/api/get-possible-meeting-time/:date', getPossibleTimes);
 
@@ -74,7 +82,6 @@ app.post('/api/update-date-time/:recordNumber', updateDateAndTime)
 
 // endpoint to delete  record
 app.delete('/api/delete-record/:recordNumber', deleteRecord)
-
 
 // default endpoint
 app.get('*', function (req, res) {

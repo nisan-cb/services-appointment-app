@@ -144,21 +144,6 @@
     .record#view .tooltip{
         display: none;
     }
-    .record#view{
-        position: fixed;
-        border-radius: 20px;
-        padding: 30px 40px;
-        height: fit-content;
-        width: fit-content;
-        top:50%;
-        left:50%;
-        transform: translate(-50%, -50%);
-        // background-color: red !important;
-        z-index: 999;
-        animation-duration: 0.5s;
-    animation-name: animate-pop;
-    animation-timing-function: cubic-bezier(.26, .53, .74, 1.48);
-    }
 
 
  
@@ -255,6 +240,17 @@
         }
     }
 
+    .add-popup{
+        background-color: whitesmoke;
+        position: fixed;
+        border-radius: 20px;
+        padding: 30px 40px;
+        top:50%;
+        left:50%;
+        transform: translate(-50%, -50%);
+        
+    }
+
     
 }
 #panel{
@@ -296,19 +292,3 @@
 
 }
 
-@keyframes animate-pop {
-    0% {
-      opacity: 0;
-    //   transform: scale(0.5, 0.5);
-    }
-    50%{
-      opacity: 0.5;
-    }
-    100%{
-      opacity: 1;
-    }
-}
-
-.dx-draggable-dragging > .record{
-    background-color:red !important;
-}

@@ -9,19 +9,16 @@ interface PropI {
 }
 
 function RecordContainer({ date, time, children }: PropI) {
-    const { draggedRecord, setMsg, setCurrRecord, setWeek } = React.useContext(Target);
+    const { draggedRecord, setMsg, setCurrRecord, setWeek, setAddFlag, currentContainer } = React.useContext(Target);
 
     const onDrop = (e: any) => {
         console.log('dropped');
-        console.log(draggedRecord);
         draggedRecord.current.el.classList.remove('in-air')
         // check if valid cell
         if (e.target.dataset.target !== 'true') return;
         // remember prev date and time
         const prevDate = draggedRecord.current.data.date
         const prevTime = draggedRecord.current.data.time
-        console.log('prev : ', prevDate, prevTime);
-        console.log('new : ', date, time);
         draggedRecord.current.data = { ...draggedRecord.current.data, 'date': date, 'time': time }
         // update new cell
         setWeek((prev: any) => ({
@@ -54,13 +51,20 @@ function RecordContainer({ date, time, children }: PropI) {
             });
     };
 
+    const addNewRecord = (e: any) => {
+        console.log('add')
+        currentContainer.current = { date: date, time: time }
+        setAddFlag((prev: any) => !prev)
+    }
+
 
     return (
         <div className="record-container"
             data-target={children ? false : true}
             onDragOver={e => { e.preventDefault() }}
             onDrop={e => onDrop(e)}
-            onClick={e => setCurrRecord(undefined)}
+            onClick={e => { setCurrRecord(undefined); setAddFlag(false) }}
+            onDoubleClick={e => addNewRecord(e)}
         >
             {children}
         </ div>

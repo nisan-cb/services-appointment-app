@@ -55,6 +55,12 @@ export const getBranchesList = async (req: Request, res: Response) => {
     res.send(branchesList)
 }
 
+// returns list of all clients
+export const getClientsList = async (req: Request, res: Response) => {
+    const branchesList = await db.getAllclients();
+    res.send(branchesList)
+}
+
 // returns list of status options
 export const getStatusOptions = async (req: Request, res: Response) => {
     const list = await db.getStatusOptions();
@@ -70,6 +76,18 @@ export const updateRecordStatus = async (req: Request, res: Response) => {
     const newStatus = req.params.newstatus
     const result = await db.updateRecordStatus(newStatus, recordNumber);
     res.send({ msg: result });
+}
+
+// add record for existing client
+export const addRecord = async (req: Request, res: Response) => {
+    console.log(req.body)
+    const { id, service, branch, date, time } = req.body;
+    try {
+        await db.insertNewRecord(branch, service, id, date, time);
+        res.json({ msg: 'new record inserted' });
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 // inserts new record to DB

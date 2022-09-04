@@ -148,6 +148,14 @@ export default class DB {
         return result.rows
     }
 
+    // return clients list from DB
+    async getAllclients() {
+        const result = await this.client.query(
+            'SELECT * FROM clients'
+        );
+        return result.rows
+    }
+
     // get client info by id
     async getClientById(id: number) {
         const result = await this.client.query(`SELECT * FROM clients WHERE id = $1 `, [id]);

@@ -3,6 +3,7 @@ import RecordContainer from "./RecordContainer";
 import MyDate from "../../classes/date";
 import './weeklyCalendar.scss'
 import Record from "./Record";
+import AddPopUP from "../AddPopUp/AddPopUp";
 
 export const Target = React.createContext<any>(undefined);
 
@@ -20,11 +21,17 @@ function WeeklyCalendar() {
     const [timeRange, setTimeRange] = useState<string[]>(getTimeRange());
     // list of all status types
     const [statusTypes, setStatusTypes] = useState<string[]>([]);
+    // add new record pop-up
+    const [addFlag, setAddFlag] = useState<boolean>(false);
 
     // current record that draged
     const draggedRecord = useRef();
     const [currRecord, setCurrRecord] = useState(1);
-    console.log(week);
+
+    // current record container
+    const currentContainer = useRef<any>({ date: undefined, time: undefined });
+
+    // console.log(week);
 
     useEffect(() => {
         // get all status options
@@ -85,6 +92,11 @@ function WeeklyCalendar() {
         )
     }
 
+    const addPopUp = () => {
+        if (!currentContainer.current) return <></>
+        return <AddPopUP date={currentContainer.current.date} time={currentContainer.current.time}></AddPopUP>
+    }
+
     // get prev week
     const getPrev = () => {
         const currentFirstDay: Date = new Date(firstDay!);
@@ -123,10 +135,11 @@ function WeeklyCalendar() {
                 </div>
                 <button id="next-btn" onClick={(getNext)}>next</button>
             </div>
-            <Target.Provider value={{ draggedRecord, setMsg, currRecord, setCurrRecord, statusTypes, setWeek }}>
+            <Target.Provider value={{ currentContainer, draggedRecord, setMsg, currRecord, setCurrRecord, statusTypes, setWeek, setAddFlag }}>
                 <div id="weeklyCalendar">
                     {displayWeek()}
                     {displayMsg()}
+                    {addFlag ? addPopUp() : undefined}
                 </div>
             </Target.Provider>
         </>

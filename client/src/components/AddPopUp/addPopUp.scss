@@ -1,0 +1,74 @@
+.add-popup{
+    background-color: whitesmoke;
+    position: fixed;
+    border-radius: 20px;
+    padding: 30px 40px;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    input{
+        margin: 20px 0;
+    }
+
+    select{
+        margin-bottom: 10px;
+    }
+
+    button{
+        position: relative;
+        margin-top: 20px;
+        bottom: 0px;
+        left: 50%;
+        max-width: 100px;
+        transform: translateX(-50%);
+        padding:5px 7px;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.661);
+        cursor: pointer;
+        transition: 0.5s;
+        font-weight: bold;
+    }
+    button:hover{
+        color: white;
+        background-color: red;
+    }
+
+
+    #search{
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        margin-bottom: 20px;
+        input{
+            padding: 7px 12px;
+            margin-bottom: 0;
+        }
+
+        #results{
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            bottom: 0;
+            background-color: white;
+            width: 100%;
+            transform: translateY(100%);
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.464);
+z-index: 9;
+            span{
+                padding: 3px 5px;
+                cursor: pointer;
+                box-shadow: 0 0 2px rgba(0, 0, 0, 0.464);
+
+            }
+
+            span:hover{
+                background-color: rgba(0, 255, 255, 0.759);
+            }
+        }
+
+    }
+}
