@@ -41,7 +41,7 @@ export default class Ws {
         websocketConnection.on("message", (message: string) => {
             const parsedMessage = JSON.parse(message);
 
-            websocketConnection.send(JSON.stringify({ message: 'There be gold in them thar hills.' }));
+            // websocketConnection.send(JSON.stringify({ message: 'There be gold in them thar hills.' }));
         });
     }
 

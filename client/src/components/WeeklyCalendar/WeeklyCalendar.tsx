@@ -40,8 +40,10 @@ function WeeklyCalendar() {
         clientWS.onopen = () => {
             console.log('WebSocket Client Connected');
         }
+
         clientWS.onmessage = (message) => {
             const newRecord = JSON.parse(message.data as string);
+            if (!newRecord.date) return;
             setWeek((prev: any) => ({
                 ...prev,
                 [newRecord.date]: { ...prev[newRecord.date], [newRecord.time]: newRecord }

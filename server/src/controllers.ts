@@ -20,7 +20,7 @@ export const getRecordsBetween2Dates = async (req: Request, res: Response) => {
     console.log("request for records between 2 dates");
     let d1: string = req.params.d1;
     let d2: string = req.params.d2;
-
+    console.log(d1, ' - ', d2)
     const records = await db.getRecordsInRange(d1, d2);
 
     const time = Time.arrToDict(timeRange);
@@ -83,7 +83,19 @@ export const updateRecordStatus = async (req: Request, res: Response) => {
 export const addRecord = async (req: Request, res: Response) => {
     const { id, service, branch, date, time } = req.body;
     try {
-        await db.insertNewRecord(branch, service, id, date, time);
+        const recordNumber = await db.insertNewRecord(branch, service, id, date, time);
+        if (recordNumber) {
+            let recordObj = await db.getRecordDataByNumber(recordNumber);
+            // format date and time
+            recordObj = {
+                ...recordObj,
+                'date': MyDate.DateToString(recordObj.date),
+                time: recordObj.time.slice(0, 5)
+            }
+            // send by socket the new record
+            ws.sendNewREcord(recordObj);
+            // send message to client 
+        }
         res.json({ msg: 'new record inserted' });
     } catch (error) {
         console.log(error)
