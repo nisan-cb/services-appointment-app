@@ -8,7 +8,7 @@ Try it out : https://services-appointment-app.herokuapp.com/
 
 ## Features:
 ### Client : 
-- multi-steps form to book service from specific branch
+- Multi-steps form to book service from specific branch
 
 ### Admin :
 - Weekly calendar to display relevant records.
