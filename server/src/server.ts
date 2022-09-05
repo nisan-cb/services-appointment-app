@@ -94,4 +94,4 @@ const server = app.listen(port, () => {
     console.log('Hosted: http://localhost:' + port);
 });
 
-const ws = new Ws(server);
+export const ws = new Ws(server);

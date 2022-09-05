@@ -107,13 +107,31 @@ export default class DB {
 
     // insert new record
     async insertNewRecord(branch_code: number, service_code: number, client_id: number, date: Date, time: any) {
-        console.log(client_id)
-        await this.client.query(
-            'INSERT INTO records (branch_code, client_id, service_code, date, time) VALUES ($1,$2,$3, $4, $5)',
+        const result = await this.client.query(
+            'INSERT INTO records (branch_code, client_id, service_code, date, time) VALUES ($1,$2,$3, $4, $5) RETURNING number',
             [branch_code, client_id, service_code, date, time]
         );
+        return result.rowCount ? result.rows[0].number : false;
     }
 
+    // get record data by number
+    async getRecordDataByNumber(number: number) {
+        const result = await this.client.query(
+            'SELECT number, branches.city, clients.name, clients.phone_number,status, services.description, date, time\
+             FROM records \
+             INNER JOIN branches ON \
+             branches.code = records.branch_code and number = $1 \
+             INNER JOIN clients ON \
+             clients.id = records.client_id \
+             INNER JOIN services ON \
+             services.code = records.service_code \
+             ORDER BY number\
+             ',
+            [number]
+        )
+
+        return result.rows[0];
+    }
     // return all records from DB
     async getAllRecords() {
         const result = await this.client.query(
@@ -250,7 +268,6 @@ export default class DB {
 
     // update record date and time
     async updateRecordDateAndTime(id: number, d: string, t: string) {
-        console.log('d : ', new Date(d));
         const result = await this.client.query('update records set date = $1::date , time = $2  where number = $3',
             [d, t, id]);
         return result;

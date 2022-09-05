@@ -1,9 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
+import { w3cwebsocket } from "websocket";
 import RecordContainer from "./RecordContainer";
 import MyDate from "../../classes/date";
 import './weeklyCalendar.scss'
 import Record from "./Record";
 import AddPopUP from "../AddPopUp/AddPopUp";
+
+const clientWS = new w3cwebsocket(`wss://${window.location.host}/websocket`);
+// const clientWS = new w3cwebsocket(`ws://localhost:4000/websocket`);
 
 export const Target = React.createContext<any>(undefined);
 
@@ -34,6 +38,20 @@ function WeeklyCalendar() {
     // console.log(week);
 
     useEffect(() => {
+        // web socket
+        clientWS.onopen = () => {
+            console.log('WebSocket Client Connected');
+        }
+        clientWS.onmessage = (message) => {
+            const newRecord = JSON.parse(message.data as string);
+            console.log(newRecord);
+            setWeek((prev: any) => ({
+                ...prev,
+                [newRecord.date]: { ...prev[newRecord.date], [newRecord.time]: newRecord }
+            }))
+        };
+
+
         // get all status options
         fetch('/api/status-options')
             .then(res => res.json())

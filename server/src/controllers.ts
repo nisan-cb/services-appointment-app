@@ -3,6 +3,7 @@ import Time from "./time";
 import MyDate from "./date";
 import { db } from './server'
 import { timeRange } from "./consts";
+import { ws } from "./server";
 
 
 
@@ -36,7 +37,7 @@ export const getRecordsBetween2Dates = async (req: Request, res: Response) => {
         record.time = record.time.slice(0, 5);
         dict[date][record.time] = record;
     });
-    console.log(dict)
+    // console.log(dict)
 
 
     res.send({ dict: dict, timeRange: Time.arrToArr(timeRange) })
@@ -95,7 +96,7 @@ export const insertNewRecord = async (req: Request, res: Response) => {
     console.log(req.body)
     // let service, branch, client_id, client_nmae, phone_number;
     const { service, branch, id, name, phoneNumber, date, time } = req.body
-    console.log(date);
+    // console.log(date);
     const t = `${time.h}:${time.m}`;
     try {
         // check if client exist in the system
@@ -108,8 +109,20 @@ export const insertNewRecord = async (req: Request, res: Response) => {
             console.log('client exist in DB');
 
         // finaly add new record
-        await db.insertNewRecord(branch, service, id, date, t);
-        res.json({ msg: 'new record inserted' });
+        const recordNumber = await db.insertNewRecord(branch, service, id, date, t);
+        if (recordNumber) {
+            let recordObj = await db.getRecordDataByNumber(recordNumber);
+            // format date and time
+            recordObj = {
+                ...recordObj,
+                'date': MyDate.DateToString(recordObj.date),
+                time: recordObj.time.slice(0, 5)
+            }
+            // send by socket the new record
+            ws.sendNewREcord(recordObj);
+            // send message to client 
+            res.json({ msg: 'new record inserted' });
+        }
     } catch (error) {
         console.log(error);
     }

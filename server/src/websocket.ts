@@ -1,54 +1,56 @@
 import { IncomingMessage } from 'http';
 import { Duplex } from 'stream';
-import WebSocket from 'ws';
+import WebSocket, { WebSocketServer } from 'ws';
 import queryString from "query-string";
 
 export default class Ws {
-    websocketServer: WebSocket.Server<WebSocket.WebSocket>
+    wss: any;
     expressServer: any;
     websocketConnection: WebSocket.WebSocket | undefined;
 
     constructor(expressServer: any) {
-        this.websocketServer = new WebSocket.Server({
+        this.wss = new WebSocketServer({
             noServer: true,
             path: "/websocket",
         });
         this.expressServer = expressServer;
-        this.websocketConnection = undefined;
 
-        // attachment of the websocket server to the existing expressServer
-        // "Upgrade" here is saying, "we need to upgrade this request to handle websockets."
         this.expressServer.on("upgrade", (request: IncomingMessage, socket: Duplex, head: Buffer) => {
-            this.updrageExperess(request, socket, head, this.websocketServer)
+            this.updrageExperess(request, socket, head, this.wss)
         });
 
-        this.websocketServer.on("connection", this.onConnection);
+        this.wss.on("connection", this.onConnection);
     }
 
+    // upgarde
     updrageExperess(request: IncomingMessage, socket: Duplex, head: Buffer, websocketServer: WebSocket.Server<WebSocket.WebSocket>) {
         websocketServer.handleUpgrade(request, socket, head, (websocket) => {
             websocketServer.emit("connection", websocket, request);
         });
     }
 
+    // on connection
     onConnection(websocketConnection: WebSocket.WebSocket, connectionRequest: IncomingMessage) {
         this.websocketConnection = websocketConnection;
         const [_path, params] = connectionRequest?.url?.split("?") || ['', ''];
         const connectionParams = queryString.parse(params);
 
         console.log('websocket connection');
+        this.websocketConnection.send(JSON.stringify({ message: 'hello from server ws' }));
 
         websocketConnection.on("message", (message: string) => {
             const parsedMessage = JSON.parse(message);
-            console.log(parsedMessage);
 
             websocketConnection.send(JSON.stringify({ message: 'There be gold in them thar hills.' }));
         });
     }
 
-    sendNewRecord(record: any) {
-        if (!this.websocketConnection) return;
-        this.websocketConnection.send(JSON.stringify({ newrecord: record }));
 
+    sendNewREcord(newREcord: any) {
+        console.log("---", newREcord)
+        this.wss.clients.forEach((ws: any) => {
+            ws.send(JSON.stringify(newREcord))
+        });
     }
+
 }
