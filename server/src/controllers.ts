@@ -81,7 +81,6 @@ export const updateRecordStatus = async (req: Request, res: Response) => {
 
 // add record for existing client
 export const addRecord = async (req: Request, res: Response) => {
-    console.log(req.body)
     const { id, service, branch, date, time } = req.body;
     try {
         await db.insertNewRecord(branch, service, id, date, time);
@@ -93,10 +92,8 @@ export const addRecord = async (req: Request, res: Response) => {
 
 // inserts new record to DB
 export const insertNewRecord = async (req: Request, res: Response) => {
-    console.log(req.body)
     // let service, branch, client_id, client_nmae, phone_number;
     const { service, branch, id, name, phoneNumber, date, time } = req.body
-    // console.log(date);
     const t = `${time.h}:${time.m}`;
     try {
         // check if client exist in the system
@@ -147,7 +144,6 @@ export const updateDateAndTime = async (req: Request, res: Response) => {
     // then update the record by new dest-date and dest-time
     try {
         const result = await db.updateRecordDateAndTime(recordNumber, destDate, destTime);
-        // console.log(result)
     } catch (error) {
 
         console.log('error', error);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Target } from './WeeklyCalendar'
 
 interface PropI {
@@ -18,7 +18,6 @@ function Record({ data }: PropI) {
     };
 
     const onClick = (e: any) => {
-        console.log('clicked')
         e.stopPropagation();
         if (currRecord === data.number)
             setCurrRecord(undefined);
@@ -50,12 +49,9 @@ function Record({ data }: PropI) {
         );
     }
 
-    const call = () => {
-        console.log('calling')
-    }
+
 
     const updateStatus = (newStatus: string) => {
-        console.log('status')
         fetch(`/api/update-record-status/${data.number}/${newStatus}`,
             {
                 method: 'PUT',
@@ -63,25 +59,23 @@ function Record({ data }: PropI) {
             })
             .then(response => response.json())
             .then(msgObj => {
-                console.log(msgObj)
                 if (msgObj.msg === true) {
-                    data = { ...data, ['status']: newStatus }
+                    data = { ...data, 'status': newStatus }
                     setWeek((prev: any) => ({
                         ...prev,
-                        [data.date]: { ...prev[data.date], [data.time]: { ...data, ['status']: newStatus } }
+                        [data.date]: { ...prev[data.date], [data.time]: { ...data, 'status': newStatus } }
                     }))
                 }
             })
             .catch(err => console.log(err));
 
     }
-    const sendMsg = () => {
-        console.log('send msg')
-    }
+    // const sendMsg = () => {
+    //     console.log('send msg')
+    // }
 
     return (
         <div className={"record " + (data.status).replace(' ', '-')}
-            // id={currRecord === data.number ? 'view' : ''}
             draggable
             onDragStart={(e) => dragStart(e)}
             onClick={e => onClick(e)}

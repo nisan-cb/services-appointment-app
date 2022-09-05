@@ -12,7 +12,6 @@ const clientWS = new w3cwebsocket(`wss://${window.location.host}/websocket`);
 export const Target = React.createContext<any>(undefined);
 
 function WeeklyCalendar() {
-    console.log('weekly calendar renderd')
     const currentDate: string = MyDate.dateToString(new Date());
 
     // state of message
@@ -35,7 +34,6 @@ function WeeklyCalendar() {
     // current record container
     const currentContainer = useRef<any>({ date: undefined, time: undefined });
 
-    // console.log(week);
 
     useEffect(() => {
         // web socket
@@ -44,7 +42,6 @@ function WeeklyCalendar() {
         }
         clientWS.onmessage = (message) => {
             const newRecord = JSON.parse(message.data as string);
-            console.log(newRecord);
             setWeek((prev: any) => ({
                 ...prev,
                 [newRecord.date]: { ...prev[newRecord.date], [newRecord.time]: newRecord }

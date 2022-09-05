@@ -6,7 +6,6 @@ interface PropsI {
 }
 
 function PopUp({ recordData }: PropsI) {
-    console.log(recordData)
 
     return (
         <div className="pop-up">

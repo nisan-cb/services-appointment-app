@@ -1,5 +1,4 @@
 import React from "react";
-import Record from "./Record";
 import { Target } from './WeeklyCalendar'
 
 interface PropI {
@@ -12,7 +11,6 @@ function RecordContainer({ date, time, children }: PropI) {
     const { draggedRecord, setMsg, setCurrRecord, setWeek, setAddFlag, currentContainer } = React.useContext(Target);
 
     const onDrop = (e: any) => {
-        console.log('dropped');
         draggedRecord.current.el.classList.remove('in-air')
         // check if valid cell
         if (e.target.dataset.target !== 'true') return;
@@ -52,7 +50,6 @@ function RecordContainer({ date, time, children }: PropI) {
     };
 
     const addNewRecord = (e: any) => {
-        console.log('add')
         currentContainer.current = { date: date, time: time }
         setAddFlag((prev: any) => !prev)
     }

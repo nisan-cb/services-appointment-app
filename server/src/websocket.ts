@@ -45,9 +45,8 @@ export default class Ws {
         });
     }
 
-
+    // send the new record to all open connections
     sendNewREcord(newREcord: any) {
-        console.log("---", newREcord)
         this.wss.clients.forEach((ws: any) => {
             ws.send(JSON.stringify(newREcord))
         });

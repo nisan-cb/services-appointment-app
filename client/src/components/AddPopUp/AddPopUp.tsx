@@ -1,5 +1,4 @@
-import React, { ReactNode, useEffect, useRef, useState } from "react";
-import { JsxElement } from "typescript";
+import React, { useEffect, useRef, useState } from "react";
 import './addPopUp.scss'
 import { Target } from '../WeeklyCalendar/WeeklyCalendar'
 

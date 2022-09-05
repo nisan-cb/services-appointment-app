@@ -47,7 +47,7 @@ function AppiontmentPage() {
         if (msg !== '') {
             setTimeout(() => {
                 setMsg('');
-                // window.location.href = 'thanks'
+                window.location.href = 'thanks'
             }, 3000);
             return <div id='msg'> {msg}</div>
         }
