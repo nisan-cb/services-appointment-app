@@ -1,23 +1,31 @@
 # services-appointment-app
 
+Generic wep platform to manage appointments to services 
+with MERN stack
 
-deployment : https://services-appointment-app.herokuapp.com/
-
-
-system to manage client appointments to services
-
-ERD 
-here
-https://drive.google.com/file/d/1xbolVcNVvaL63xfZWLdqkuzeufPq6Mm0/view?usp=sharing
-
-include:
-client
-- multi-steps form that client can book service from specific branch
-
-admin
-- table with all history of appointmens
-- manage and change record status
+Try it out : https://services-appointment-app.herokuapp.com/
 
 
+# Features:
+## Client : 
+- multi-steps form to book service from specific branch
+
+## Admin :
+- Weekly calendar to display relevant records.
+- Management change record status.
+- Navigation between dates.
+- Addtion new record (for existing client) by double click on empty cell.
+- Drag & Drop
+- Auto update calendar (implemented by websocket)
+
+
+# Technologies
+- Node.js v14.19.2
+- React v18.2.0
+- Heroku
+- PostreSQL
+
+# ERD 
+![ERD](https://drive.google.com/uc?export=view&id=1o6EnsTjR4N13YPajG-er08Py254jWzFf)
 
 
