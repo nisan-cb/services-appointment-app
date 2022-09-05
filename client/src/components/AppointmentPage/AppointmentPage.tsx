@@ -4,7 +4,6 @@ import './appointmentPage.scss'
 
 
 function AppiontmentPage() {
-    console.log('appointment page render')
     const [servicesList, setServicesList] = useState<any[]>([]);
     const [branchesList, setBranchesList] = useState<any[]>([]);
     const [msg, setMsg] = useState<string>('');
@@ -27,7 +26,6 @@ function AppiontmentPage() {
     // run when click on submit
     const submitHandler = (e: any, appiontmentData: any) => {
         e.preventDefault();
-        console.log('***', appiontmentData)
         // sent POST request to server
         fetch(`/api/insertNewRecord`, {
             method: "POST",
