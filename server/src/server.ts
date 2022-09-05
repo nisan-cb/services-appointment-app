@@ -4,7 +4,8 @@ import cors from 'cors';
 import { json } from 'body-parser';
 import DB from './db';
 const { timeRange } = require('./consts')
-import Time from './time';
+import Ws from './websocket';
+
 import {
     getAllRecords,
     getRecordsBetween2Dates,
@@ -89,6 +90,8 @@ app.get('*', function (req, res) {
 });
 
 // starts listen on port
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log('Hosted: http://localhost:' + port);
 });
+
+const ws = new Ws(server);
