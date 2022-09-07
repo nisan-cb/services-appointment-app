@@ -1,6 +1,6 @@
 # services-appointment-app
 
-Generic wep platform to manage appointments to services 
+Generic web platform to manage appointments to services 
 with MERN stack
 
 Try it out : https://services-appointment-app.herokuapp.com/
